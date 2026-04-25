@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: fullstack_demo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    command: -jar DynamoDBLocal.jar -sharedDb -inMemory
+    ports:
+      - '8000:8000'
+
+  backend:
+    build: ./backend
+    ports:
+      - '4000:4000'
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: fullstack_demo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      AWS_REGION: ap-southeast-1
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+      AUDIT_TABLE: customer_audit
+    depends_on:
+      - postgres
+      - dynamodb-local
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
