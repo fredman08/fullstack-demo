@@ -1,0 +1,35 @@
+<div class="container">
+  <a routerLink="/customers" class="back">← Back to Customers</a>
+  <h1>New Customer</h1>
+  <p>Sends a <span class="tag tag-rest">REST POST /api/customers</span> and logs to <span class="tag tag-ddb">DynamoDB</span></p>
+
+  <form (ngSubmit)="submit()" style="margin-top: 20px">
+    <div class="field">
+      <label for="name">Full Name</label>
+      <input
+        id="name"
+        [(ngModel)]="name"
+        name="name"
+        required
+        placeholder="Juan dela Cruz"
+        autocomplete="off"
+      />
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        [(ngModel)]="email"
+        name="email"
+        type="email"
+        required
+        placeholder="juan@example.com"
+        autocomplete="off"
+      />
+    </div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+    <button type="submit" class="btn-primary" [disabled]="loading">
+      {{ loading ? 'Creating…' : 'Create Customer' }}
+    </button>
+  </form>
+</div>
