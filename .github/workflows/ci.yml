@@ -83,6 +83,19 @@ jobs:
       - name: Start full stack via docker compose
         run: |
           docker compose up -d --build --wait
+      - name: Wait for frontend to serve
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost/ > /dev/null; then
+              echo "Frontend is up"
+              exit 0
+            fi
+            echo "Waiting for frontend... ($i/30)"
+            sleep 2
+          done
+          echo "Frontend never responded"
+          docker compose logs frontend
+          exit 1
       - name: Show service status
         run: docker compose ps
       - name: Install e2e deps
