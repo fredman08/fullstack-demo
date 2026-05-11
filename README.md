@@ -6,9 +6,9 @@ A teaching-grade full-stack reference app: **Angular 17 SPA** ↔ **Node.js (Exp
 
 | | URL |
 |---|---|
-| **Frontend (live)** | https://fullstack-demo-frontend.onrender.com |
-| **Backend health** | https://fullstack-demo-backend.onrender.com/api/health |
-| **Backend GraphQL** | https://fullstack-demo-backend.onrender.com/graphql |
+| **Frontend (live)** | https://fullstack-demo-frontend-bzzn.onrender.com |
+| **Backend health** | https://fullstack-demo-backend-8ti1.onrender.com/api/health |
+| **Backend GraphQL** | https://fullstack-demo-backend-8ti1.onrender.com/graphql |
 | **Repo** | https://github.com/fredman08/fullstack-demo |
 
 > ⚠️ **Render free-tier cold start.** The backend sleeps after ~15 minutes of inactivity. The first request after a sleep can take **30–60 seconds** to wake the service. Subsequent requests are snappy.
@@ -53,7 +53,7 @@ Browser ──▶ Angular SPA (Render static)
 
 ## Live Demo
 
-Open https://fullstack-demo-frontend.onrender.com — wait up to a minute for the backend to wake on the first request, then create a customer, view their detail page (orders + audit log), and delete them.
+Open https://fullstack-demo-frontend-bzzn.onrender.com — wait up to a minute for the backend to wake on the first request, then create a customer, view their detail page (orders + audit log), and delete them.
 
 ---
 
@@ -231,7 +231,7 @@ This repo ships with a [`render.yaml`](render.yaml) Render Blueprint — one cli
 3. Before the first deploy, set the backend's `DATABASE_URL` env var to your Neon string. `ALLOWED_ORIGINS` is pre-filled in `render.yaml` to the frontend's public URL.
 4. Click **Apply**. Wait for both services green.
 
-The frontend's `environment.prod.ts` is **pre-baked** to point at `https://fullstack-demo-backend.onrender.com`, matching the service name in `render.yaml`. If you rename either service, update `environment.prod.ts` and `ALLOWED_ORIGINS` accordingly.
+The frontend's `environment.prod.ts` is **pre-baked** to point at `https://fullstack-demo-backend-8ti1.onrender.com`, matching the service name in `render.yaml`. If you rename either service, update `environment.prod.ts` and `ALLOWED_ORIGINS` accordingly.
 
 ### Auto-deploy
 Every push to `master` re-deploys both services. Render also auto-watches the linked branch.

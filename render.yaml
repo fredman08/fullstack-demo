@@ -14,7 +14,7 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: ALLOWED_ORIGINS
-        value: https://fullstack-demo-frontend.onrender.com
+        value: https://fullstack-demo-frontend-bzzn.onrender.com
 
   - type: web
     name: fullstack-demo-frontend
