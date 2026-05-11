@@ -5,14 +5,13 @@
     Loading via <span class="tag tag-gql">GraphQL</span>…
   </div>
 
-  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="error" class="error" data-testid="detail-error">{{ error }}</div>
 
-  <div *ngIf="customer">
-    <h1>{{ customer.name }}</h1>
-    <p>{{ customer.email }}</p>
+  <div *ngIf="customer" data-testid="customer-detail">
+    <h1 data-testid="customer-name">{{ customer.name }}</h1>
+    <p data-testid="customer-email">{{ customer.email }}</p>
     <small>Member since {{ customer.created_at | date:'longDate' }}</small>
 
-    <!-- Orders from GraphQL nested resolver -->
     <h2>
       Orders
       <span class="tag tag-gql">GraphQL nested resolver → PostgreSQL</span>
@@ -28,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let o of customer.orders">
+        <tr *ngFor="let o of customer.orders" data-testid="order-row">
           <td>{{ o.product }}</td>
           <td>{{ o.total | currency:'USD' }}</td>
           <td><span class="badge">{{ o.status }}</span></td>
@@ -37,24 +36,23 @@
       </tbody>
     </table>
 
-    <p *ngIf="!customer.orders || customer.orders.length === 0">No orders yet.</p>
+    <p *ngIf="!customer.orders || customer.orders.length === 0" data-testid="no-orders">No orders yet.</p>
 
-    <!-- Audit log from DynamoDB -->
     <h2>
       Audit Log
-      <span class="tag tag-ddb">DynamoDB customer_audit table</span>
+      <span class="tag tag-ddb">PostgreSQL audit_log table</span>
     </h2>
 
     <div *ngIf="auditLog.length > 0">
-      <div *ngFor="let entry of auditLog" class="audit-entry">
+      <div *ngFor="let entry of auditLog" class="audit-entry" data-testid="audit-entry">
         <code>{{ entry.action }}</code>
         &nbsp;—&nbsp;
         {{ entry.timestamp | date:'medium' }}
       </div>
     </div>
 
-    <p *ngIf="auditLog.length === 0">
-      No audit entries. DynamoDB Local may not be running, or this customer was seeded before audit logging was set up.
+    <p *ngIf="auditLog.length === 0" data-testid="no-audit">
+      No audit entries for this customer.
     </p>
   </div>
 </div>

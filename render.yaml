@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: fullstack-demo-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://fullstack-demo-frontend.onrender.com
+
+  - type: web
+    name: fullstack-demo-frontend
+    runtime: static
+    rootDir: frontend
+    region: oregon
+    buildCommand: npm ci && npm run build -- --configuration production
+    staticPublishPath: dist/frontend/browser
+    pullRequestPreviewsEnabled: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

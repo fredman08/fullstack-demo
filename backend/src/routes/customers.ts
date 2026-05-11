@@ -2,8 +2,9 @@ import { Router } from 'express';
 import * as customerService from '../services/customerService';
 import { logAudit } from '../services/auditService';
 
-// Topic 11: REST — HTTP verbs map to CRUD (GET=READ, POST=INSERT, DELETE=DELETE)
 const router = Router();
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 router.get('/', async (_req, res) => {
   const customers = await customerService.getAllCustomers();
@@ -17,12 +18,23 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { name, email } = req.body as { name?: string; email?: string };
-  if (!name || !email) return res.status(400).json({ error: 'name and email are required' });
+  const rawName = (req.body as { name?: unknown }).name;
+  const rawEmail = (req.body as { email?: unknown }).email;
+
+  const name = typeof rawName === 'string' ? rawName.trim() : '';
+  const email = typeof rawEmail === 'string' ? rawEmail.trim() : '';
+
+  if (!name || name.length > 100) {
+    return res.status(400).json({ error: 'name is required and must be 1-100 characters' });
+  }
+  if (!EMAIL_REGEX.test(email)) {
+    return res.status(400).json({ error: 'email is invalid' });
+  }
 
   const customer = await customerService.createCustomer({ name, email });
-  // Fire-and-forget audit log to DynamoDB — does not block the REST response
-  logAudit(customer.id, 'CREATE', { name, email }).catch(console.warn);
+  logAudit(customer.id, 'CREATE', { name, email }).catch((e) =>
+    console.error('Audit log failed:', e),
+  );
   res.status(201).json(customer);
 });
 

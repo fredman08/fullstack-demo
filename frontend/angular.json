@@ -24,7 +24,7 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              { "glob": "**/*", "input": "public" }
+              { "glob": "**/*", "input": "public", "output": "/" }
             ],
             "styles": ["src/styles.css"],
             "scripts": []
@@ -35,7 +35,13 @@
                 { "type": "initial", "maximumWarning": "500kb", "maximumError": "1mb" },
                 { "type": "anyComponentStyle", "maximumWarning": "2kb", "maximumError": "4kb" }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
@@ -53,18 +59,13 @@
           },
           "defaultConfiguration": "development"
         },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
-          }
-        },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "assets": [],
+            "karmaConfig": "karma.conf.js",
+            "assets": [{ "glob": "**/*", "input": "public", "output": "/" }],
             "styles": ["src/styles.css"],
             "scripts": []
           }
