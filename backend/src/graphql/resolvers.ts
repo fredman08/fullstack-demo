@@ -21,7 +21,9 @@ export const resolvers = {
   Mutation: {
     createCustomer: async (_: unknown, args: { name: string; email: string }) => {
       const customer = await customerService.createCustomer(args);
-      logAudit(customer.id, 'CREATE_VIA_GRAPHQL', args).catch(console.warn);
+      logAudit(customer.id, 'CREATE_VIA_GRAPHQL', args).catch((e) =>
+        console.error('Audit log failed:', e),
+      );
       return customer;
     },
 

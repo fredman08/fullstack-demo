@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   backend:
@@ -13,6 +13,27 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: fullstack_demo_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: fullstack_demo_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      ALLOWED_ORIGINS: http://localhost
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,10 +44,10 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-      - run: npm test -- --passWithNoTests
+      - run: npm run test:ci
 
   frontend:
-    name: Frontend — lint, build
+    name: Frontend — lint, build, test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -38,6 +59,54 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: frontend/package-lock.json
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
       - run: npm ci
       - run: npm run lint
       - run: npm run build -- --configuration production
+      - run: npm run test:ci
+        env:
+          CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
+
+  e2e:
+    name: E2E — Playwright against full stack
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+      - name: Start full stack via docker compose
+        run: |
+          docker compose up -d --build --wait
+      - name: Show service status
+        run: docker compose ps
+      - name: Install e2e deps
+        working-directory: e2e
+        run: npm ci || npm install
+      - name: Install Playwright browsers
+        working-directory: e2e
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        working-directory: e2e
+        env:
+          CI: 'true'
+          E2E_BASE_URL: http://localhost
+        run: npx playwright test
+      - name: Dump backend logs on failure
+        if: failure()
+        run: docker compose logs backend
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

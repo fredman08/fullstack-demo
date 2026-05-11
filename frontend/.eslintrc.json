@@ -1,6 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": ["projects/**/*", "dist/**/*", "node_modules/**/*"],
   "overrides": [
     {
       "files": ["*.ts"],
@@ -11,7 +11,27 @@
         "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
-        "@typescript-eslint/no-explicit-any": "warn"
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+      }
+    },
+    {
+      "files": ["*.spec.ts"],
+      "env": { "jasmine": true },
+      "globals": {
+        "jasmine": "readonly",
+        "describe": "readonly",
+        "it": "readonly",
+        "expect": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "beforeAll": "readonly",
+        "afterAll": "readonly",
+        "spyOn": "readonly",
+        "fail": "readonly"
+      },
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]

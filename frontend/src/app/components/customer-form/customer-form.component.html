@@ -1,7 +1,7 @@
 <div class="container">
   <a routerLink="/customers" class="back">← Back to Customers</a>
   <h1>New Customer</h1>
-  <p>Sends a <span class="tag tag-rest">REST POST /api/customers</span> and logs to <span class="tag tag-ddb">DynamoDB</span></p>
+  <p>Sends a <span class="tag tag-rest">REST POST /api/customers</span> and writes to the <span class="tag tag-ddb">PostgreSQL audit_log table</span></p>
 
   <form (ngSubmit)="submit()" style="margin-top: 20px">
     <div class="field">
@@ -13,6 +13,7 @@
         required
         placeholder="Juan dela Cruz"
         autocomplete="off"
+        data-testid="name-input"
       />
     </div>
     <div class="field">
@@ -25,10 +26,16 @@
         required
         placeholder="juan@example.com"
         autocomplete="off"
+        data-testid="email-input"
       />
     </div>
-    <div *ngIf="error" class="error">{{ error }}</div>
-    <button type="submit" class="btn-primary" [disabled]="loading">
+    <div *ngIf="error" class="error" data-testid="form-error">{{ error }}</div>
+    <button
+      type="submit"
+      class="btn-primary"
+      [disabled]="loading"
+      data-testid="submit-btn"
+    >
       {{ loading ? 'Creating…' : 'Create Customer' }}
     </button>
   </form>
