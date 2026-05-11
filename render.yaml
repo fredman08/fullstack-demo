@@ -20,7 +20,6 @@ services:
     name: fullstack-demo-frontend
     runtime: static
     rootDir: frontend
-    region: oregon
     buildCommand: npm ci && npm run build -- --configuration production
     staticPublishPath: dist/frontend/browser
     pullRequestPreviewsEnabled: false
