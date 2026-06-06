@@ -2,14 +2,14 @@
 
 A teaching-grade full-stack reference app: **Angular 17 SPA** ↔ **Node.js (Express + Apollo GraphQL)** ↔ **PostgreSQL**. Deployable to **Render** with a managed Postgres on **Neon**, fully tested (Jest + Karma + Playwright), and CI-gated via GitHub Actions.
 
-[![CI](https://github.com/fredman08/fullstack-demo/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/fredman08/fullstack-demo/actions/workflows/ci.yml)
+[![CI](https://github.com/YOUR_GITHUB_USER/fullstack-demo/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/YOUR_GITHUB_USER/fullstack-demo/actions/workflows/ci.yml)
 
 | | URL |
 |---|---|
 | **Frontend (live)** | https://fullstack-demo-frontend-bzzn.onrender.com |
 | **Backend health** | https://fullstack-demo-backend-8ti1.onrender.com/api/health |
 | **Backend GraphQL** | https://fullstack-demo-backend-8ti1.onrender.com/graphql |
-| **Repo** | https://github.com/fredman08/fullstack-demo |
+| **Repo** | https://github.com/YOUR_GITHUB_USER/fullstack-demo |
 
 > ⚠️ **Render free-tier cold start.** The backend sleeps after ~15 minutes of inactivity. The first request after a sleep can take **30–60 seconds** to wake the service. Subsequent requests are snappy.
 
@@ -67,7 +67,7 @@ Open https://fullstack-demo-frontend-bzzn.onrender.com — wait up to a minute f
 ### One-shot: full stack via Docker
 
 ```sh
-git clone https://github.com/fredman08/fullstack-demo.git
+git clone https://github.com/YOUR_GITHUB_USER/fullstack-demo.git
 cd fullstack-demo
 cp .env.example .env       # local defaults are fine
 docker compose up --build  # spins up postgres + backend + frontend
